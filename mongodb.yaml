@@ -1,0 +1,28 @@
+- name: Installing mongodb
+  hosts: mongodb
+  become: yes
+  tasks:
+  - name: copying the mongo repo file
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+    
+  - name: Installing mongodb
+    ansible.builtin.dnf:
+      name: mongodb-org
+      state: present
+  - name: starting the mongodb service
+    ansible.builtin.service:
+      name: mongod
+      state: started
+      enable: yes
+
+  - name: allow remote connections
+    ansible.builtin.replace:
+      path: /etc/mongod.conf
+      regexp: 1227.0.0.0
+      replace: 0.0.0.0
+  - name: restart mongodb
+    ansible.builtin.service:
+      name: mongod
+      state: restarted
