@@ -1,0 +1,13 @@
+- name: Configuring the shipping server
+  hosts: shipping
+  become: yes
+  tasks:
+  - name: installing maven and mysql
+    ansible.builtin.dnf:
+      name: "{{ item }}"
+      state: installed
+    loop:
+    - maven
+    - mysql
+
+  - name: 
